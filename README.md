@@ -10,6 +10,5 @@ npm: 6.9.0
 npm install
 
 # Examples
-
-# node <script_path> <sheet_tab_index> <Sprint number> <fetch_github_comments_since>
+node <script_path> <sheet_tab_index> <Sprint number> <fetch_github_comments_since>
 node scripts/spreadsheet.js '13' "'Sprint 44'" '2019-08-05T00:00:00Z'
