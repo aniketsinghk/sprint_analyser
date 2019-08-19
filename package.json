@@ -1,0 +1,11 @@
+{
+  "name": "catalog-admin",
+  "version": "1.0.0",
+  "dependencies": {
+    "btoa": "^1.2.1",
+    "google-spreadsheet": "^2.0.7",
+    "node": "^12.7.0",
+    "nodejs": "0.0.0",
+    "request": "^2.88.0"
+  }
+}
