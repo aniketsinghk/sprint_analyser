@@ -2,7 +2,7 @@ exports.GIT_REPO_AUTHOR = 'mpulsemobile';
 exports.GIT_PROJECT = 'platform';
 exports.SONAR_PROJECT1_KEY = 'catalog.adminServer';
 exports.SONAR_PROJECT2_KEY = 'catalog.admin';
-exports.SHEET_LINK = '1c96009R0Vhf_yHc7d91XKJ1MtTzN1tAcrSRgwJCdNxY';
+exports.SHEET_LINK = '1vnXo0goBqmrJLPyYYGPW66ZHwS7-BuY9ywdJofxZdFM';
 exports.GIT_HUB_COMMENT_TYPE = {
     typeAComment: '#A',
     typeBComment: '#B',
