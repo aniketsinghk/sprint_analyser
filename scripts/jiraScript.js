@@ -10,7 +10,7 @@ const sprint = process.argv[3];
 function _getOptions(queryType) {
     var url = "https://unityinfluence.atlassian.net/rest/api/2/search" +
         "?jql=" + queryType;
-
+    console.log(url)
     return {
         url: url,
         headers: {
@@ -62,7 +62,7 @@ function getJiraMetric(queryType, message, type) {
                     resolve(count);
                 }
             } else {
-                console.log('Some error occurred!');
+                console.log('Some error occurred inside JIRA!');
             }
 
         });

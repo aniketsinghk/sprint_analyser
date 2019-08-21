@@ -38,7 +38,7 @@ function getSonarQubeMetric(projectKey, metricType) {
             }
 
             else {
-                console.log('Some error occurred!');
+                console.log('Some error occurred inside Sonar!');
             }
 
         });

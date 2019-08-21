@@ -64,7 +64,7 @@ function placeRequest(pageNumber, incomingJson, resolve) {
                 resolve(commentArray);
             }
         } else {
-            console.log('Some error occurred!');
+            console.log('Some error occurred inside Github!');
         }
     });
 }
