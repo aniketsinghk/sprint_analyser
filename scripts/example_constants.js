@@ -12,15 +12,11 @@ exports.GIT_HUB_COMMENT_TYPE = {
     typeCComment: '',
 };
 exports.JQL = {
-    doneTicketsInSprint: "Sprint IN (" + process.argv[3] + ") AND issuetype IN " +
-    "(Improvement, Story, Task) AND status IN " +
-    "(Done, \"In Progress\", \"In QA\", Review)",
-    storyPointsInSprint: "Sprint in (" + process.argv[3] + ") AND issuetype IN " +
-    "(Improvement, Story, Task) AND status IN " +
-    "(Done, \"In Progress\", \"In QA\", Review) AND \"Story Points\" > 1",
-    reviewedTickets: "Sprint in (" + process.argv[3] + ") AND issuetype IN " +
-    "(\"Code review sub-task\") AND status IN " +
-    "(Done, \"In Progress\", \"In QA\", Review)"
+    doneTicketsInSprint: "Sprint IN ('" + process.argv[3] + "') AND status IN " +
+    "(\"In QA\")",
+    storyPointsInSprint: "Sprint in ('" + process.argv[3] + "')",
+    reviewedTickets: "Sprint in ('" + process.argv[3] + "') AND status IN " +
+    "(Done, \"In Progress\", \"In QA\")"
 };
 exports.CREDENTIALS = {
     gitAccessKey: '',
