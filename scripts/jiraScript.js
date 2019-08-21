@@ -8,7 +8,7 @@ const apiToken = constants.CREDENTIALS.jiraAccessKey;
 const sprint = process.argv[3];
 
 function _getOptions(queryType) {
-    var url = "https://unityinfluence.atlassian.net/rest/api/2/search" +
+    var url = "https://mpulsemobile.atlassian.net/rest/api/2/search" +
         "?jql=" + queryType;
     console.log(url)
     return {
