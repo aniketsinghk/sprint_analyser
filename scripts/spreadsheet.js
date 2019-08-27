@@ -84,20 +84,20 @@ async.series([
 
 
                 // Total number of comments made on GITHUB in a sprint
-                // github.getGitHubMetric(1, [])
-                //     .then(function (commentArray) {
-                //         console.log("Comments array: " + commentArray)
-                //         cells[5].value = commentArray[0];
-                //         cells[5].save();
-                //         cells[7].value = commentArray[1];
-                //         cells[7].save();
-                //         cells[8].value = commentArray[2];
-                //         cells[8].save();
-                //         cells[9].value = commentArray[3];
-                //         cells[9].save();
-                //         cells[11].value = 'Python , React';
-                //         cells[11].save();
-                //     })
+                github.getGitHubMetric(1, [])
+                    .then(function (commentArray) {
+                        console.log("Comments array: " + commentArray)
+                        cells[6].value = commentArray[0];
+                        cells[6].save();
+                        cells[8].value = commentArray[1].toString();
+                        cells[8].save();
+                        cells[9].value = commentArray[2].toString();
+                        cells[9].save();
+                        cells[10].value = commentArray[3].toString();
+                        cells[10].save();
+                        cells[11].value = '=IF(GCD(C9:C11) > 0,C9/GCD(C9:C11)&":"&C10/GCD(C9:C11)&":"&C11/GCD(C9:C11),0)';
+                        cells[11].save();
+                    })
 
 
                 //Quality gate status

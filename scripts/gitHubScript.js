@@ -31,7 +31,6 @@ function placeRequest(pageNumber, incomingJson, resolve) {
 
         if (!error && response.statusCode === 200) {
             var currentPageJson = JSON.parse(body);
-
             for (var key in currentPageJson) {
                 var commentBody = currentPageJson[key]['body'];
                 if (commentBody.startsWith(gitCommentType.typeAComment)) {
@@ -43,10 +42,12 @@ function placeRequest(pageNumber, incomingJson, resolve) {
                     typeCCount++;
 
                 }
+                if (!currentPageJson[key]['in_reply_to_id']){
+                    commentCount += 1;
+                }
             }
 
             var joinedRepos = incomingJson.concat(currentPageJson);
-            commentCount += Object.keys(currentPageJson).length;
 
             if (response.headers.link) {
                 var linkData = response.headers.link;
