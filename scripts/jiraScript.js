@@ -40,6 +40,7 @@ function getJiraMetric(queryType, message, type) {
             if (!error && response.statusCode === 200) {
 
                 var parsedJson = JSON.parse(body);
+                // console.log(parsedJson)
                 var count = parsedJson['total'];
 
                 if (count === 0) {
@@ -59,7 +60,13 @@ function getJiraMetric(queryType, message, type) {
                     }
 
                 } else {
-                    resolve(count);
+                    var story_points = 0
+                    for (i = 0; i < count; i++) {
+                        if (parsedJson.issues[i].fields.customfield_10013 != null){
+                            story_points += parsedJson.issues[i].fields.customfield_10013
+                        }
+                    }
+                    resolve([count,story_points]);
                 }
             } else {
                 console.log('Some error occurred inside JIRA!');
