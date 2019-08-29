@@ -25,7 +25,7 @@ var constants = require('./constants');
 
 var sheet;
 var cell;
-var sheetTab = process.argv[2];
+var sheetTab = 0;
 
 // Create a document object using the ID of the spreadsheet : obtained from its URL.
 var doc = new GoogleSpreadsheet(constants.SHEET_LINK);
@@ -48,8 +48,8 @@ async.series([
         },
         function workingWithCells(callback) {
             sheet.getCells({
-                'min-col': 3,
-                'max-col': 3,
+                'min-col': process.argv[2],
+                'max-col': process.argv[2],
                 'return-empty': true
             }, function (err, cells) {
 
@@ -58,20 +58,44 @@ async.series([
                     .then(function (done) {
                         console.log("Done: " + done[0])
                         console.log("Story Points: " + done[1])
+                        cells[0].value = process.argv[3];
+                        cells[0].save();
                         cells[1].value = done[0];
                         cells[1].save();
                         cells[2].value = done[1];
                         cells[2].save();
-                    });
 
-                // Number of tickets having story point greater than 1
-                // jira.getJiraMetric(JQL.storyPointsInSprint, "Total Story points", "Story Points")
-                //     .then(function (spg1) {
-                //         console.log("Story points: " + spg1)
-                //         cell = cells[2];
-                //         cell.value = spg1;
-                //         cell.save();
-                //     });
+                        // Total number of comments made on GITHUB in a sprint
+                    github.getGitHubMetric(1, [])
+                        .then(function (commentArray) {
+                            console.log('3');
+                            console.log("Comments array: " + commentArray)
+                            cells[6].value = commentArray[0];
+                            cells[6].save();
+                            cells[8].value = commentArray[1].toString();
+                            cells[8].save();
+                            cells[9].value = commentArray[2].toString();
+                            cells[9].save();
+                            cells[10].value = commentArray[3].toString();
+                            cells[10].save();
+                            cells[11].value = '=IF(GCD(C9:C11) > 0,C9/GCD(C9:C11)&":"&C10/GCD(C9:C11)&":"&C11/GCD(C9:C11),0)';
+                            cells[11].save();
+                        })
+
+                    github.getGitHubPR([])
+                        .then(function (pushedTickets) {
+                            console.log('4');
+                            console.log("No of pushed tickets: " + pushedTickets);
+                            cells[3].value = pushedTickets;
+                            cells[3].save();
+                            cells[4].value = pushedTickets;
+                            cells[4].save();
+                            cells[5].value = "=IF(C4 > 0, (C5/C4)*100, 0)";
+                            cells[5].save();
+                            cells[7].value = "=IF(C5 > 0, C7/C5, 0)";
+                            cells[7].save();
+                        })
+                    });
 
                 // Number of tickets for which review has been done
                 // jira.getJiraMetric(JQL.reviewedTickets, "Reviewed Tickets", "Reviewed")
@@ -81,24 +105,6 @@ async.series([
                 //         cell.value = reviewed;
                 //         cell.save();
                 //     });
-
-
-                // Total number of comments made on GITHUB in a sprint
-                github.getGitHubMetric(1, [])
-                    .then(function (commentArray) {
-                        console.log("Comments array: " + commentArray)
-                        cells[6].value = commentArray[0];
-                        cells[6].save();
-                        cells[8].value = commentArray[1].toString();
-                        cells[8].save();
-                        cells[9].value = commentArray[2].toString();
-                        cells[9].save();
-                        cells[10].value = commentArray[3].toString();
-                        cells[10].save();
-                        cells[11].value = '=IF(GCD(C9:C11) > 0,C9/GCD(C9:C11)&":"&C10/GCD(C9:C11)&":"&C11/GCD(C9:C11),0)';
-                        cells[11].save();
-                    })
-
 
                 //Quality gate status
                 // sonar.getSonarQubeMetric(sonarProject1, 'alert_status')

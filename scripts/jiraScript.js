@@ -6,6 +6,7 @@ const ids = [];
 const username = constants.CREDENTIALS.jiraUserName;
 const apiToken = constants.CREDENTIALS.jiraAccessKey;
 const sprint = process.argv[3];
+const tickets = [];
 
 function _getOptions(queryType) {
     var url = "https://mpulsemobile.atlassian.net/rest/api/2/search" +
@@ -40,7 +41,6 @@ function getJiraMetric(queryType, message, type) {
             if (!error && response.statusCode === 200) {
 
                 var parsedJson = JSON.parse(body);
-                // console.log(parsedJson)
                 var count = parsedJson['total'];
 
                 if (count === 0) {
@@ -62,10 +62,13 @@ function getJiraMetric(queryType, message, type) {
                 } else {
                     var story_points = 0
                     for (i = 0; i < count; i++) {
+                        tickets.push(parsedJson.issues[i].key);
                         if (parsedJson.issues[i].fields.customfield_10013 != null){
                             story_points += parsedJson.issues[i].fields.customfield_10013
                         }
                     }
+                    console.log(tickets);
+                    exports.ticketsInSprint = tickets;
                     resolve([count,story_points]);
                 }
             } else {

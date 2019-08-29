@@ -1,14 +1,16 @@
 var constants = require('./constants');
 var request = require('request');
+var jira = require('./jiraScript'); 
 
 var commentCount = 0;
 var typeACount = 0;
 var typeBCount = 0;
 var typeCCount = 0;
 const commentArray = [];
+var pushedTickets = [];
 
 const sinceDateTime = process.argv[4];
-const gitCommentType = constants.GIT_HUB_COMMENT_TYPE
+const gitCommentType = constants.GIT_HUB_COMMENT_TYPE;
 const accessToken = constants.CREDENTIALS.gitAccessKey;
 
 function _getOptions(pageNumber) {
@@ -26,18 +28,33 @@ function _getOptions(pageNumber) {
     };
 };
 
+function _getOptionsPR() {
+    var url = "https://api.github.com/repos/" + constants.GIT_REPO_AUTHOR + "/" + constants.GIT_PROJECT +
+        "/commits?since='" + sinceDateTime + "'";
+
+    return {
+        url: url,
+
+        headers: {
+            'User-Agent': 'request',
+            Authorization: "token " + accessToken
+        },
+        method: 'GET',
+    };
+};
+
 function placeRequest(pageNumber, incomingJson, resolve) {
     request(_getOptions(pageNumber), function (error, response, body) {
 
         if (!error && response.statusCode === 200) {
             var currentPageJson = JSON.parse(body);
+
             for (var key in currentPageJson) {
                 var commentBody = currentPageJson[key]['body'];
                 if (commentBody.startsWith(gitCommentType.typeAComment)) {
                     typeACount++;
                 } else if (commentBody.startsWith(gitCommentType.typeBComment)) {
                     typeBCount++;
-
                 } else if (commentBody.startsWith(gitCommentType.typeCComment)) {
                     typeCCount++;
 
@@ -70,6 +87,30 @@ function placeRequest(pageNumber, incomingJson, resolve) {
     });
 }
 
+function placePRRequest(incomingJson, resolve) {
+    request(_getOptionsPR(), function (error, response, body) {
+
+        if (!error && response.statusCode === 200) {
+            var currentPageJson = JSON.parse(body);
+            console.log();
+            for (var key in currentPageJson) {
+                var commitMessage = currentPageJson[key]['commit']['message'].trimLeft();
+                // console.log(commitMessage);
+                if (commitMessage.startsWith("MSXDEV")){
+                    var ticketNo = commitMessage.split(" ")[0];
+                    if(!pushedTickets.includes(ticketNo) && jira.ticketsInSprint.includes(ticketNo)){
+                        pushedTickets.push(ticketNo);
+                    }
+                } 
+            }
+            console.log("Pushed Tickets: " + pushedTickets);
+            resolve(pushedTickets.length);
+        } else {
+            console.log('Some error occurred inside Github!');
+        }
+    });
+}
+
 /**
  * This places a request to the GITHUB GET comments REST API.
  * getOptions() forms the URL and its required headers.
@@ -83,4 +124,11 @@ function getGitHubMetric(pageNumber, incomingJson) {
     });
 }
 
+function getGitHubPR(incomingJson) {
+    return new Promise(function (resolve, reject) {
+        placePRRequest(incomingJson, resolve);
+    });
+}
+
 module.exports.getGitHubMetric = getGitHubMetric;
+module.exports.getGitHubPR = getGitHubPR;
