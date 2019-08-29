@@ -92,10 +92,9 @@ function placePRRequest(incomingJson, resolve) {
 
         if (!error && response.statusCode === 200) {
             var currentPageJson = JSON.parse(body);
-            console.log();
+ 
             for (var key in currentPageJson) {
                 var commitMessage = currentPageJson[key]['commit']['message'].trimLeft();
-                // console.log(commitMessage);
                 if (commitMessage.startsWith("MSXDEV")){
                     var ticketNo = commitMessage.split(" ")[0];
                     if(!pushedTickets.includes(ticketNo) && jira.ticketsInSprint.includes(ticketNo)){

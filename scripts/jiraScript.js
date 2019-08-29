@@ -11,7 +11,7 @@ const tickets = [];
 function _getOptions(queryType) {
     var url = "https://mpulsemobile.atlassian.net/rest/api/2/search" +
         "?jql=" + queryType;
-    console.log(url)
+  
     return {
         url: url,
         headers: {
@@ -42,7 +42,7 @@ function getJiraMetric(queryType, message, type) {
 
                 var parsedJson = JSON.parse(body);
                 var count = parsedJson['total'];
-
+               
                 if (count === 0) {
                     console.log("No " + message + " in " + sprint)
                 }
@@ -67,7 +67,6 @@ function getJiraMetric(queryType, message, type) {
                             story_points += parsedJson.issues[i].fields.customfield_10013
                         }
                     }
-                    console.log(tickets);
                     exports.ticketsInSprint = tickets;
                     resolve([count,story_points]);
                 }

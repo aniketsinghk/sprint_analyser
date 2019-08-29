@@ -65,7 +65,7 @@ async.series([
                         cells[2].value = done[1];
                         cells[2].save();
 
-                        // Total number of comments made on GITHUB in a sprint
+                    // Total number of comments made on GITHUB in a sprint
                     github.getGitHubMetric(1, [])
                         .then(function (commentArray) {
                             console.log('3');
@@ -96,140 +96,6 @@ async.series([
                             cells[7].save();
                         })
                     });
-
-                // Number of tickets for which review has been done
-                // jira.getJiraMetric(JQL.reviewedTickets, "Reviewed Tickets", "Reviewed")
-                //     .then(function (reviewed) {
-                //         console.log("Reviewed: " + reviewed)
-                //         cell = cells[3];
-                //         cell.value = reviewed;
-                //         cell.save();
-                //     });
-
-                //Quality gate status
-                // sonar.getSonarQubeMetric(sonarProject1, 'alert_status')
-                //     .then(function (serverValue) {
-                //         console.log("Quality gate: " + serverValue)
-                //         sonar.getSonarQubeMetric(sonarProject2, 'alert_status')
-                //             .then(function (reactValue) {
-                //                 console.log("Quality gate: " + reactValue)
-                //                 var result = serverValue + " , " + reactValue;
-                //                 cells[12].value = result;
-                //                 cells[12].save();
-                //             })
-                //     })
-
-
-                //Number of bugs
-                // sonar.getSonarQubeMetric(sonarProject1, 'bugs')
-                //     .then(function (serverValue) {
-                //         console.log("Bugs: " + serverValue)
-                //         sonar.getSonarQubeMetric(sonarProject2, 'bugs')
-                //             .then(function (reactValue) {
-                //                 console.log("Bugs: " + reactValue)
-                //                 var result = serverValue + " , " + reactValue;
-                //                 cells[13].value = result;
-                //                 cells[13].save();
-                //             })
-                //     })
-
-
-                //Code Smells
-                // sonar.getSonarQubeMetric(sonarProject1, 'code_smells')
-                //     .then(function (serverValue) {
-                //         console.log("Code smells: " + serverValue)
-                //         sonar.getSonarQubeMetric(sonarProject2, 'code_smells')
-                //             .then(function (reactValue) {
-                //                 console.log("Code smells: " + reactValue)
-                //                 var result = serverValue + " , " + reactValue;
-                //                 cells[14].value = result;
-                //                 cells[14].save();
-                //             })
-                //     })
-
-
-                //Duplicated lines %
-                // sonar.getSonarQubeMetric(sonarProject1, 'duplicated_lines_density')
-                //     .then(function (serverValue) {
-                //         console.log("Duplicated lines: " + serverValue)
-                //         sonar.getSonarQubeMetric(sonarProject2, 'duplicated_lines_density')
-                //             .then(function (reactValue) {
-                //                 console.log("Duplicated lines: " + reactValue)
-                //                 var result = serverValue + "% , " + reactValue + "%";
-                //                 cells[15].value = result;
-                //                 cells[15].save();
-                //             })
-                //     })
-
-                // //Technical debt effort
-                // sonar.getSonarQubeMetric(sonarProject1, 'sqale_index')
-                //     .then(function (serverValue) {
-                //         console.log("Technical debt effort: " + serverValue)
-                //         sonar.getSonarQubeMetric(sonarProject2, 'sqale_index')
-                //             .then(function (reactValue) {
-                //                 console.log("Technical debt effort: " + reactValue)
-                //                 var serverValue2 = Math.ceil(serverValue / (8 * 60)) + ' day(s)';
-                //                 var reactValue2 = Math.ceil(reactValue / (8 * 60)) + ' day(s)';
-                //                 var result = serverValue2 + ", " + reactValue2 + "";
-                //                 cells[16].value = result;
-                //                 cells[16].save();
-                //             })
-                //     })
-
-                //Reliability Rating
-                // sonar.getSonarQubeMetric(sonarProject1, 'reliability_rating')
-                //     .then(function (serverValue) {
-                //         console.log("Duplicated lines: " + serverValue)
-                //         sonar.getSonarQubeMetric(sonarProject2, 'reliability_rating')
-                //             .then(function (reactValue) {
-                //                 console.log("Reliability Rating: " + reactValue)
-                //                 var result = serverValue + " , " + reactValue + "";
-                //                 cells[17].value = result;
-                //                 cells[17].save();
-                //             })
-                //     })
-
-
-                //Security Rating
-                // sonar.getSonarQubeMetric(sonarProject1, 'security_rating')
-                //     .then(function (serverValue) {
-                //         console.log("Security Rating: " + serverValue)
-                //         sonar.getSonarQubeMetric(sonarProject2, 'security_rating')
-                //             .then(function (reactValue) {
-                //                 console.log("Security Rating: " + reactValue)
-                //                 var result = serverValue + " , " + reactValue + "";
-                //                 cells[18].value = result;
-                //                 cells[18].save();
-                //             })
-                //     })
-
-
-                // Tests coverage %
-                // sonar.getSonarQubeMetric(sonarProject1,'overall_coverage')
-                //     .then(function(serverValue){
-                //         console.log("Test coverage: " + serverValue)
-                //         sonar.getSonarQubeMetric(sonarProject2, 'overall_coverage')
-                //             .then(function (reactValue) {
-                //                 console.log("Test coverage: " + reactValue)
-                //                 var result = serverValue + " , " + reactValue + "";
-                //                 cells[19].value = result;
-                //                 cells[19].save();
-                //             })
-                //     })
-
-                //Coverage on new code
-                // sonar.getSonarQubeMetric(sonarProject1,'new_coverage')
-                //     .then(function(serverValue){
-                //         console.log("Coverage on new code: " + serverValue)
-                //         sonar.getSonarQubeMetric(sonarProject2, 'new_coverage')
-                //             .then(function (reactValue) {
-                //                 console.log("Coverage on new code: " + reactValue)
-                //                 var result = serverValue + " , " + reactValue + "";
-                //                 cells[20].value = result;
-                //                 cells[20].save();
-                //             })
-                //     })
-
                 callback();
             });
         },
