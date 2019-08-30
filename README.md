@@ -28,6 +28,6 @@ Tool to generate sprint-wise report
 - Copy the Spreadsheet Id from the link and assign it to ```SHEET_LINK``` inside ```constants.js```
  
 # Examples
-node <script_path> <column_number> <Sprint number> <fetch_github_comments_since>
+node <script_path> <column_name> <Sprint number> <fetch_github_comments_since>
 
-node scripts/spreadsheet.js '13' "'Sprint 44'" '2019-08-05T00:00:00Z'
+node scripts/spreadsheet.js 'D' "'Sprint 44'" '2019-08-05T00:00:00Z'

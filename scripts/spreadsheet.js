@@ -26,7 +26,8 @@ var constants = require('./constants');
 var sheet;
 var cell;
 var sheetTab = 0;
-
+var column = process.argv[2].toUpperCase();
+column = column.charCodeAt(0) - 64; // Converting Character to number.
 // Create a document object using the ID of the spreadsheet : obtained from its URL.
 var doc = new GoogleSpreadsheet(constants.SHEET_LINK);
 
@@ -48,8 +49,8 @@ async.series([
         },
         function workingWithCells(callback) {
             sheet.getCells({
-                'min-col': process.argv[2],
-                'max-col': process.argv[2],
+                'min-col': column,
+                'max-col': column,
                 'return-empty': true
             }, function (err, cells) {
 
