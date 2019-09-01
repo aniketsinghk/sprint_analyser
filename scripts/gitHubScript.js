@@ -28,7 +28,7 @@ function _getOptions(pageNumber) {
     };
 };
 
-function _getOptionsPR() {
+function _getOptionsCommits() {
     var url = "https://api.github.com/repos/" + constants.GIT_REPO_AUTHOR + "/" + constants.GIT_PROJECT +
         "/commits?since='" + sinceDateTime + "'";
 
@@ -87,8 +87,8 @@ function placeRequest(pageNumber, incomingJson, resolve) {
     });
 }
 
-function placePRRequest(incomingJson, resolve) {
-    request(_getOptionsPR(), function (error, response, body) {
+function placeCommitsRequest(incomingJson, resolve) {
+    request(_getOptionsCommits(), function (error, response, body) {
 
         if (!error && response.statusCode === 200) {
             var currentPageJson = JSON.parse(body);
@@ -123,11 +123,11 @@ function getGitHubMetric(pageNumber, incomingJson) {
     });
 }
 
-function getGitHubPR(incomingJson) {
+function getGitHubCommits(incomingJson) {
     return new Promise(function (resolve, reject) {
-        placePRRequest(incomingJson, resolve);
+        placeCommitsRequest(incomingJson, resolve);
     });
 }
 
 module.exports.getGitHubMetric = getGitHubMetric;
-module.exports.getGitHubPR = getGitHubPR;
+module.exports.getGitHubCommits = getGitHubCommits;

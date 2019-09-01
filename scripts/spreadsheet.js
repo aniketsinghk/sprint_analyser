@@ -27,7 +27,7 @@ var sheet;
 var cell;
 var sheetTab = 0;
 var column = process.argv[2].toUpperCase();
-column = column.charCodeAt(0) - 64; // Converting Character to number.
+var columnNumber = column.charCodeAt(0) - 64; // Converting Character to number.
 // Create a document object using the ID of the spreadsheet : obtained from its URL.
 var doc = new GoogleSpreadsheet(constants.SHEET_LINK);
 
@@ -49,8 +49,8 @@ async.series([
         },
         function workingWithCells(callback) {
             sheet.getCells({
-                'min-col': column,
-                'max-col': column,
+                'min-col': columnNumber,
+                'max-col': columnNumber,
                 'return-empty': true
             }, function (err, cells) {
 
@@ -79,11 +79,11 @@ async.series([
                             cells[9].save();
                             cells[10].value = commentArray[3].toString();
                             cells[10].save();
-                            cells[11].value = '=IF(GCD(C9:C11) > 0,C9/GCD(C9:C11)&":"&C10/GCD(C9:C11)&":"&C11/GCD(C9:C11),0)';
+                            cells[11].value = '=IF(GCD('+column+'9:'+column+'11) > 0,'+column+'9/GCD('+column+'9:'+column+'11)&":"&'+column+'10/GCD('+column+'9:'+column+'11)&":"&'+column+'11/GCD('+column+'9:'+column+'11),0)';
                             cells[11].save();
                         })
 
-                    github.getGitHubPR([])
+                    github.getGitHubCommits([])
                         .then(function (pushedTickets) {
                             console.log('4');
                             console.log("No of pushed tickets: " + pushedTickets);
@@ -91,9 +91,9 @@ async.series([
                             cells[3].save();
                             cells[4].value = pushedTickets;
                             cells[4].save();
-                            cells[5].value = "=IF(C4 > 0, (C5/C4)*100, 0)";
+                            cells[5].value = "=IF("+column+"4 > 0, ("+column+"5/"+column+"4)*100, 0)";
                             cells[5].save();
-                            cells[7].value = "=IF(C5 > 0, C7/C5, 0)";
+                            cells[7].value = "=IF("+column+"5 > 0, "+column+"7/"+column+"5, 0)";
                             cells[7].save();
                         })
                     });
