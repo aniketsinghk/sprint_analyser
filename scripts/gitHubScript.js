@@ -68,17 +68,16 @@ function placeRequest(pageNumber, incomingJson, resolve) {
 
             for (var key in currentPageJson) {
                 var commentBody = currentPageJson[key]['body'];
-                if (commentBody.startsWith(gitCommentType.typeAComment)) {
-                    typeACount++;
-                } else if (commentBody.startsWith(gitCommentType.typeBComment)) {
-                    typeBCount++;
-                } else if (commentBody.startsWith(gitCommentType.typeCComment)) {
-                    typeCCount++;
-
-                }
                 var PrNumber = currentPageJson[key]['pull_request_url'].split("/").pop();
                 if (!currentPageJson[key]['in_reply_to_id'] && PRNo.includes(parseInt(PrNumber))){
                     commentCount += 1;
+                    if (commentBody.startsWith(gitCommentType.typeAComment)) {
+                        typeACount++;
+                    } else if (commentBody.startsWith(gitCommentType.typeBComment)) {
+                        typeBCount++;
+                    } else if (commentBody.startsWith(gitCommentType.typeCComment)) {
+                        typeCCount++;
+                    }
                 }
             }
 
