@@ -66,35 +66,40 @@ async.series([
                         cells[2].value = done[1];
                         cells[2].save();
 
-                    // Total number of comments made on GITHUB in a sprint
-                    github.getGitHubMetric(1, [])
-                        .then(function (commentArray) {
-                            console.log('3');
-                            console.log("Comments array: " + commentArray)
-                            cells[6].value = commentArray[0];
-                            cells[6].save();
-                            cells[8].value = commentArray[1].toString();
-                            cells[8].save();
-                            cells[9].value = commentArray[2].toString();
-                            cells[9].save();
-                            cells[10].value = commentArray[3].toString();
-                            cells[10].save();
-                            cells[11].value = '=IF(GCD('+column+'9:'+column+'11) > 0,'+column+'9/GCD('+column+'9:'+column+'11)&":"&'+column+'10/GCD('+column+'9:'+column+'11)&":"&'+column+'11/GCD('+column+'9:'+column+'11),0)';
-                            cells[11].save();
-                        })
-
-                    github.getGitHubCommits([])
-                        .then(function (pushedTickets) {
-                            console.log('4');
-                            console.log("No of pushed tickets: " + pushedTickets);
-                            cells[3].value = pushedTickets;
-                            cells[3].save();
-                            cells[4].value = pushedTickets;
+                    // Total number of reviwed tickets on GITHUB in a sprint                    
+                    github.getGitHubPR([])
+                        .then(function (reviewedTickets) {
+                            console.log("No of reviwed tickets: " + reviewedTickets);
+                            cells[4].value = reviewedTickets;
                             cells[4].save();
-                            cells[5].value = "=IF("+column+"4 > 0, ("+column+"5/"+column+"4)*100, 0)";
-                            cells[5].save();
-                            cells[7].value = "=IF("+column+"5 > 0, "+column+"7/"+column+"5, 0)";
-                            cells[7].save();
+                            
+                            // Total number of comments made on GITHUB in a sprint
+                            github.getGitHubMetric(1, [])
+                                .then(function (commentArray) {
+                                    console.log("Comments array: " + commentArray)
+                                    cells[6].value = commentArray[0];
+                                    cells[6].save();
+                                    cells[8].value = commentArray[1].toString();
+                                    cells[8].save();
+                                    cells[9].value = commentArray[2].toString();
+                                    cells[9].save();
+                                    cells[10].value = commentArray[3].toString();
+                                    cells[10].save();
+                                    cells[11].value = '=IF(GCD('+column+'9:'+column+'11) > 0,'+column+'9/GCD('+column+'9:'+column+'11)&":"&'+column+'10/GCD('+column+'9:'+column+'11)&":"&'+column+'11/GCD('+column+'9:'+column+'11),0)';
+                                    cells[11].save();
+                                })
+
+
+                            github.getGitHubCommits([])
+                                .then(function (pushedTickets) {
+                                    console.log("No of pushed tickets: " + pushedTickets);
+                                    cells[3].value = pushedTickets;
+                                    cells[3].save();
+                                    cells[5].value = "=IF("+column+"4 > 0, ("+column+"5/"+column+"4)*100, 0)";
+                                    cells[5].save();
+                                    cells[7].value = "=IF("+column+"5 > 0, "+column+"7/"+column+"5, 0)";
+                                    cells[7].save();
+                                })
                         })
                     });
                 callback();

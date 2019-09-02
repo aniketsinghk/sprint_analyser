@@ -8,6 +8,8 @@ var typeBCount = 0;
 var typeCCount = 0;
 const commentArray = [];
 var pushedTickets = [];
+var PRNo = [];
+var reviewedTickets = 0;
 
 const sinceDateTime = process.argv[4];
 const gitCommentType = constants.GIT_HUB_COMMENT_TYPE;
@@ -43,6 +45,21 @@ function _getOptionsCommits() {
     };
 };
 
+function _getOptionsPR() {
+    var url = "https://api.github.com/repos/" + constants.GIT_REPO_AUTHOR + "/" + constants.GIT_PROJECT +
+        "/pulls?state=all&base=sprint";
+
+    return {
+        url: url,
+
+        headers: {
+            'User-Agent': 'request',
+            Authorization: "token " + accessToken
+        },
+        method: 'GET',
+    };
+};
+
 function placeRequest(pageNumber, incomingJson, resolve) {
     request(_getOptions(pageNumber), function (error, response, body) {
 
@@ -59,7 +76,8 @@ function placeRequest(pageNumber, incomingJson, resolve) {
                     typeCCount++;
 
                 }
-                if (!currentPageJson[key]['in_reply_to_id']){
+                var PrNumber = currentPageJson[key]['pull_request_url'].split("/").pop();
+                if (!currentPageJson[key]['in_reply_to_id'] && PRNo.includes(parseInt(PrNumber))){
                     commentCount += 1;
                 }
             }
@@ -110,6 +128,35 @@ function placeCommitsRequest(incomingJson, resolve) {
     });
 }
 
+function placePRRequest(incomingJson, resolve) {
+    request(_getOptionsPR(), function (error, response, body) {
+
+        if (!error && response.statusCode === 200) {
+            var currentPageJson = JSON.parse(body);
+            var reviewedUniqueTickets = [];
+            for (var key in currentPageJson) {
+                var commitTitle = currentPageJson[key]['title'].trimLeft();
+                
+                if (commitTitle.startsWith("MSXDEV")){
+                    var ticketNo = commitTitle.split(" ")[0];
+                    if(jira.ticketsInSprint.includes(ticketNo)){
+                        PRNo.push(currentPageJson[key]["number"]);
+                        if(currentPageJson[key]["merged_at"] != null && !reviewedUniqueTickets.includes(ticketNo)){
+                            reviewedTickets += 1;
+                            reviewedUniqueTickets.push(ticketNo);
+                        }
+                    }
+                } 
+            }
+            console.log("PR No: " + PRNo);
+            console.log("Reviwed Tickets:" + reviewedTickets);
+            resolve(reviewedTickets);
+        } else {
+            console.log('Some error occurred inside Github!');
+        }
+    });
+}
+
 /**
  * This places a request to the GITHUB GET comments REST API.
  * getOptions() forms the URL and its required headers.
@@ -129,5 +176,12 @@ function getGitHubCommits(incomingJson) {
     });
 }
 
+function getGitHubPR(incomingJson) {
+    return new Promise(function (resolve, reject) {
+        placePRRequest(incomingJson, resolve);
+    });
+}
+
 module.exports.getGitHubMetric = getGitHubMetric;
 module.exports.getGitHubCommits = getGitHubCommits;
+module.exports.getGitHubPR = getGitHubPR;
