@@ -70,14 +70,14 @@ async.series([
                     github.getGitHubPR([])
                         .then(function (reviewedTickets) {
                             console.log("No of reviwed tickets: " + reviewedTickets);
-                            cells[4].value = reviewedTickets;
+                            cells[4].value = reviewedTickets.toString();
                             cells[4].save();
                             
                             // Total number of comments made on GITHUB in a sprint
                             github.getGitHubMetric([])
                                 .then(function (commentArray) {
                                     console.log("Comments array: " + commentArray)
-                                    cells[6].value = commentArray[0];
+                                    cells[6].value = commentArray[0].toString();
                                     cells[6].save();
                                     cells[8].value = commentArray[1].toString();
                                     cells[8].save();
@@ -93,7 +93,7 @@ async.series([
                             github.getGitHubCommits([])
                                 .then(function (pushedTickets) {
                                     console.log("No of pushed tickets: " + pushedTickets);
-                                    cells[3].value = pushedTickets;
+                                    cells[3].value = pushedTickets.toString();
                                     cells[3].save();
                                     cells[5].value = "=IF("+column+"4 > 0, ("+column+"5/"+column+"4)*100, 0)";
                                     cells[5].save();

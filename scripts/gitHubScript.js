@@ -121,9 +121,9 @@ function placePRRequest(incomingJson, resolve) {
             var reviewedUniqueTickets = [];
             for (var key in currentPageJson) {
                 var commitTitle = currentPageJson[key]['title'].trimLeft();
-                
-                if (commitTitle.startsWith("MSXDEV")){
+                if (commitTitle.startsWith("[MSXDEV")){
                     var ticketNo = commitTitle.split(" ")[0];
+                    ticketNo = ticketNo.match(/\[([^)]+)\]/)[1];
                     if(jira.ticketsInSprint.includes(ticketNo)){
                         PRNo.push(currentPageJson[key]["number"]);
                         if(currentPageJson[key]["merged_at"] != null && !reviewedUniqueTickets.includes(ticketNo)){
