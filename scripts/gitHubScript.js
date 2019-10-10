@@ -67,7 +67,6 @@ function placeRequest(pullRequestIndex, incomingJson, resolve) {
             if (!error && response.statusCode === 200) {
                 var currentPageJson = JSON.parse(body);
                 var commentBody = currentPageJson['body'];
-                console.log(commentBody);
                 if (!currentPageJson['in_reply_to_id']){
                     commentCount += 1;
                     if (commentBody.startsWith(gitCommentType.typeAComment)) {
@@ -98,8 +97,9 @@ function placeCommitsRequest(incomingJson, resolve) {
  
             for (var key in currentPageJson) {
                 var commitMessage = currentPageJson[key]['commit']['message'].trimLeft();
-                if (commitMessage.startsWith("MSXDEV")){
+                if (commitMessage.startsWith("[MSXDEV")){
                     var ticketNo = commitMessage.split(" ")[0];
+                    ticketNo = ticketNo.match(/\[([^)]+)\]/)[1];
                     if(!pushedTickets.includes(ticketNo) && jira.ticketsInSprint.includes(ticketNo)){
                         pushedTickets.push(ticketNo);
                     }
@@ -134,6 +134,7 @@ function placePRRequest(incomingJson, resolve) {
                 } 
             }
             console.log("PR No: " + PRNo);
+            console.log("Reviwed Tickets:" + reviewedUniqueTickets);
             console.log("Reviwed Tickets:" + reviewedTickets);
             resolve(reviewedTickets);
         } else {
