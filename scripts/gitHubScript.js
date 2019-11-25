@@ -17,7 +17,7 @@ const accessToken = constants.CREDENTIALS.gitAccessKey;
 
 function _getOptions(pullNumber) {
     var url = "https://api.github.com/repos/" + constants.GIT_REPO_AUTHOR + "/" + constants.GIT_PROJECT +
-        "/pulls/"+pullNumber+"comments";
+        "/pulls/"+pullNumber+"/comments";
 
     return {
         url: url,
@@ -32,7 +32,7 @@ function _getOptions(pullNumber) {
 
 function _getOptionsCommits() {
     var url = "https://api.github.com/repos/" + constants.GIT_REPO_AUTHOR + "/" + constants.GIT_PROJECT +
-        "/commits?since='" + sinceDateTime + "'";
+        "/commits?per_page=100&sha=sprint&since='" + sinceDateTime + "'";
 
     return {
         url: url,
@@ -63,18 +63,20 @@ function _getOptionsPR() {
 function placeRequest(pullRequestIndex, incomingJson, resolve) {
     if (pullRequestIndex < PRNo.length){
         request(_getOptions(PRNo[pullRequestIndex]), function (error, response, body) {
-
             if (!error && response.statusCode === 200) {
                 var currentPageJson = JSON.parse(body);
-                var commentBody = currentPageJson['body'];
-                if (!currentPageJson['in_reply_to_id']){
-                    commentCount += 1;
-                    if (commentBody.startsWith(gitCommentType.typeAComment)) {
-                        typeACount++;
-                    } else if (commentBody.startsWith(gitCommentType.typeBComment)) {
-                        typeBCount++;
-                    } else if (commentBody.startsWith(gitCommentType.typeCComment)) {
-                        typeCCount++;
+                if (currentPageJson.length > 0){
+                    for(var i = 0; i < currentPageJson.length; i++) {
+                        var commentBody = currentPageJson[i]['body'];
+//                        console.log(commentBody)
+                        commentCount += 1;
+                        if (commentBody.startsWith(gitCommentType.typeAComment)) {
+                            typeACount++;
+                        } else if (commentBody.startsWith(gitCommentType.typeBComment)) {
+                            typeBCount++;
+                        } else if (commentBody.startsWith(gitCommentType.typeCComment)) {
+                            typeCCount++;
+                        }
                     }
                 }
             } else {
@@ -85,25 +87,38 @@ function placeRequest(pullRequestIndex, incomingJson, resolve) {
     }else{
         commentArray.push(commentCount, typeACount, typeBCount, typeCCount);
         console.log("GITHUB metric in order is: " + commentArray);
+        console.log("Total comments: " + commentCount);
+        console.log("Type A comment (#syntax): " + typeACount);
+        console.log("Type B comment (#logic): " + typeBCount);
+        console.log("Type C comment (#structure): " + typeCCount);
         resolve(commentArray);
     }
 }
 
 function placeCommitsRequest(incomingJson, resolve) {
     request(_getOptionsCommits(), function (error, response, body) {
-
+        console.log("Tickets in sprint")
+        console.log(jira.ticketsInSprint)
         if (!error && response.statusCode === 200) {
             var currentPageJson = JSON.parse(body);
- 
+//            console.log("commits count" + currentPageJson.length)
+            pushedTickets = []
             for (var key in currentPageJson) {
                 var commitMessage = currentPageJson[key]['commit']['message'].trimLeft();
-                if (commitMessage.startsWith("[MSXDEV")){
-                    var ticketNo = commitMessage.split(" ")[0];
-                    ticketNo = ticketNo.match(/\[([^)]+)\]/)[1];
-                    if(!pushedTickets.includes(ticketNo) && jira.ticketsInSprint.includes(ticketNo)){
-                        pushedTickets.push(ticketNo);
-                    }
-                } 
+                var ticketNo = ''
+                if (commitMessage.startsWith("[MSXDEV-")){
+                    ticketNo = commitMessage.substring(1, 13);
+//                } else if (commitMessage.startsWith("MSXDEV-")){
+//                    ticketNo = commitMessage.substring(0, 12);
+//                    console.log(ticketNo)
+                } else if (commitMessage.startsWith("Merge pull request") || commitMessage.startsWith("Merge branch")){
+
+                } else {
+                    console.log("Wrong commit message ==>" + commitMessage)
+                }
+                if(!pushedTickets.includes(ticketNo) && jira.ticketsInSprint.includes(ticketNo)){
+                    pushedTickets.push(ticketNo);
+                }
             }
             console.log("Pushed Tickets: " + pushedTickets);
             resolve(pushedTickets.length);
@@ -134,11 +149,13 @@ function placePRRequest(incomingJson, resolve) {
                             reviewedUniqueTickets.push(ticketNo);
                         }
                     }
-                } 
+                } else {
+                    console.log("Wrong PR title ==>" + commitTitle)
+                }
             }
             console.log("PR No: " + PRNo);
-            console.log("Reviwed Tickets:" + reviewedUniqueTickets);
-            console.log("Reviwed Tickets:" + reviewedTickets);
+            console.log("Reviewed Unique Tickets:" + reviewedUniqueTickets);
+            console.log("Reviewed Unique Ticket count:" + reviewedTickets);
             resolve(reviewedTickets);
         } else {
             console.log('Some error occurred inside Github!');

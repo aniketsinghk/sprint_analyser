@@ -76,7 +76,7 @@ async.series([
                             // Total number of comments made on GITHUB in a sprint
                             github.getGitHubMetric([])
                                 .then(function (commentArray) {
-                                    console.log("Comments array: " + commentArray)
+//                                    console.log("Comments array: " + commentArray)
                                     cells[6].value = commentArray[0].toString();
                                     cells[6].save();
                                     cells[8].value = commentArray[1].toString();
