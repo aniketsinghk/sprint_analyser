@@ -30,4 +30,4 @@ Tool to generate sprint-wise report
 # Examples
 node <script_path> <column_name> <Sprint number> <fetch_github_comments_since>
 
-node scripts/spreadsheet.js 'D' "'Sprint 44'" '2019-08-05T00:00:00Z'
+node scripts/spreadsheet.js 'D' 'Sprint 44' '2019-08-05T00:00:00Z'
